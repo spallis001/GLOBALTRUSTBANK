@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, ur>
+from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -46,14 +46,18 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-username = request.form['username']
+        username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username, password=password>
+        user = User.query.filter_by(username=username, password=password).first()
+        
         if user:
             session['user'] = username
             return redirect(url_for('dashboard'))
-        return 'Invalid credentials'
+        else:
+            return "Invalid credentials"
+    
     return render_template('login.html')
+
 
 # --- Dashboard ---
 @app.route('/dashboard')
